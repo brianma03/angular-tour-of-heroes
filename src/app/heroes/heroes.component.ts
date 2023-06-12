@@ -1,23 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
 import { Hero } from '../hero';
-import { HeroService } from '../hero.service'
+import { HeroService } from '../hero.service';
+import { MessageService } from '../message.service';
 
 @Component({
-  selector: 'app-heroes', // This is how the component is accessed in the css file
-  templateUrl: './heroes.component.html', // Location of where the html file is
-  styleUrls: ['./heroes.component.css'] // Location of where the css file is
+  selector: 'app-heroes',
+  templateUrl: './heroes.component.html',
+  styleUrls: ['./heroes.component.css']
 })
-export class HeroesComponent {
+export class HeroesComponent implements OnInit {
 
-  heroes: Hero[] = [];
   selectedHero?: Hero;
 
-  constructor(private heroService: HeroService) {}
+  heroes: Hero[] = [];
 
-  getHeroes(): void {
-    this.heroService.getHeroes()
-        .subscribe(heroes => this.heroes = heroes);
-  }
+  constructor(private heroService: HeroService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getHeroes();
@@ -25,7 +23,11 @@ export class HeroesComponent {
 
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
+    this.messageService.add(`HeroesComponent: Selected hero id=${hero.id}`);
   }
 
-
+  getHeroes(): void {
+    this.heroService.getHeroes()
+        .subscribe(heroes => this.heroes = heroes);
+  }
 }
